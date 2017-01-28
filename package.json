@@ -1,5 +1,5 @@
 {
-  "name": "@damiandennis/ng2-list-view",
+  "name": "ng2-list-view",
   "version": "0.0.1",
   "description": "Simple list view for view large result sets.",
   "main": "index.js",
