@@ -3,3 +3,5 @@
 !**/*.d.ts
 !*.js
 !**/*.js
+!*.metadata.json
+!**/*.metadata.json
