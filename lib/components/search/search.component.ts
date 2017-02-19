@@ -5,12 +5,27 @@ import "rxjs/add/operator/debounceTime";
 @Component({
     moduleId: module.id,
     selector: "c-search",
-    templateUrl: "search.component.html"
+    templateUrl: "search.component.html",
+    styles: [`
+        :host {
+            position: relative;
+            display: block;
+        }
+        .search-clear {
+            position: absolute;
+            top: 7px;
+            right: 8px;
+        }
+        a {
+            cursor: pointer;
+        }
+    `]
 })
 export class SearchComponent implements OnInit {
 
     @Output() @Input() public searchTerm = new EventEmitter();
     @Input() public placeholder: string = "Search";
+    @Input() public isCustom = false;
     protected classes: Array<string> = ["form-control"];
     protected searchInputControl: FormControl = new FormControl();
 

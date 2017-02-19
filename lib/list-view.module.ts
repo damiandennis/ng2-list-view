@@ -10,10 +10,12 @@ import {PaginationComponent} from "./components/pagination/pagination.component"
 import {SearchComponent} from "./components/search/search.component";
 import {ShowMoreComponent} from "./components/show-more/show.more.component";
 import {CommonModule} from "@angular/common";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        ReactiveFormsModule
     ],
     declarations: [
         ClearFiltersComponent,

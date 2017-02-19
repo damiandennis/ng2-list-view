@@ -4,6 +4,7 @@ import "rxjs/add/operator/debounceTime";
 export declare class SearchComponent implements OnInit {
     searchTerm: EventEmitter<{}>;
     placeholder: string;
+    isCustom: boolean;
     protected classes: Array<string>;
     protected searchInputControl: FormControl;
     ngOnInit(): void;

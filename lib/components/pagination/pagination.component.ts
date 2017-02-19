@@ -14,7 +14,7 @@ export class PaginationComponent implements OnChanges {
 
     @Input() public changePageEmitter: EventEmitter<any>;
 
-    ngOnChanges() {
+    ngOnChanges(changes: any) {
         this.pages = this.updatePagination();
     }
 

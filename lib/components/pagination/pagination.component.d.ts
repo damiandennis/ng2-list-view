@@ -5,7 +5,7 @@ export declare class PaginationComponent implements OnChanges {
     pageCount: number;
     pages: Array<any>;
     changePageEmitter: EventEmitter<any>;
-    ngOnChanges(): void;
+    ngOnChanges(changes: any): void;
     onPrev(): void;
     onNext(): void;
     goToPage(page: number): void;
