@@ -86,6 +86,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     public dataSource: Observable<any>;
     protected lastSearch: string = "";
     public updating = false;
+    public activeID: number;
 
     /**
      * @inheritdoc
@@ -100,6 +101,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
 
         // Subscription to page change triggered by `pagination` component
         this.changePageEmitter.subscribe((page: number) => {
+            this.updating = true;
             this.dataSource = this.dataService.setParam("page", page).fetchAll();
             this.updateSubscriptions();
         });
@@ -142,12 +144,13 @@ export class ListViewComponent implements OnInit, AfterContentInit {
             this.clearFilters(clear);
         });
 
-        this.listPreviewVisibleEmitter.subscribe((hidden: boolean) => {
+        this.listPreviewVisibleEmitter.subscribe((hidden) => {
             this.listPreviewComponent.hidden = hidden;
             this.listRowComponent.previewHidden = hidden;
         });
 
-        this.activeRowEmitter.subscribe((row: any) => {
+        this.activeRowEmitter.subscribe((row) => {
+            this.activeID = row[this.dataService.primaryKey()];
             this.listPreviewComponent.data = row;
         });
 
@@ -183,8 +186,9 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     /**
      * Refreshes the list.
      */
-    public refresh() {
-        this.updateSubscriptions();
+    public refresh(hidePreview: boolean = true) {
+        this.updating = true;
+        return this.updateSubscriptions(false, hidePreview);
     }
 
     /**
@@ -217,6 +221,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
      */
     public applyFilters(append: Boolean = false) {
         // Apply filters to data service
+        this.updating = true;
         this.dataSource = this.dataService.setParam("filters", this.filters).fetchAll();
         this.updateSubscriptions(append);
     }
@@ -237,6 +242,9 @@ export class ListViewComponent implements OnInit, AfterContentInit {
         if (this.searchComponent) {
             this.searchComponent.clearSearchTerm();
         }
+        if (this.listFiltersComponent) {
+            this.listFiltersComponent.forEach((component) => component.reset());
+        }
 
         // Reapply filters
         this.applyFilters();
@@ -245,28 +253,31 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     /**
      * Syncs all data to child components
      */
-    public updateSubscriptions(append: Boolean = false) {
-        this.updating = true;
-        this.dataSource.subscribe(
-            (data) => {
-                this.loading = false;
-                this.updating = false;
-                this.currentPage = data.meta.page;
-                this.pageCount = data.meta.pageCount;
-                this.initSearchComponent();
-                this.initListRowComponent(data, append);
-                this.initPaginationComponent(data);
-                this.initCounterComponent(data);
-                this.initNotFoundComponent(data);
-                this.initNoResultsComponent(data);
-                this.initClearFiltersComponent();
-                this.initListPreviewComponent();
-                this.initShowMoreComponent(data);
-            },
-            (error) => {
-                this.handleRequestErrorEmitter.emit(error);
-            }
-        );
+    public updateSubscriptions(append: Boolean = false, hidePreview: boolean = true) {
+        return new Promise((resolve, reject) => {
+            this.dataSource.subscribe(
+                (data) => {
+                    this.loading = false;
+                    this.updating = false;
+                    this.currentPage = data.meta.page;
+                    this.pageCount = data.meta.pageCount;
+                    this.initSearchComponent();
+                    this.initListRowComponent(data, append);
+                    this.initPaginationComponent(data);
+                    this.initCounterComponent(data);
+                    this.initNotFoundComponent(data);
+                    this.initNoResultsComponent(data);
+                    this.initClearFiltersComponent();
+                    this.initListPreviewComponent(hidePreview);
+                    this.initShowMoreComponent(data);
+                    resolve(true);
+                },
+                (error) => {
+                    this.handleRequestErrorEmitter.emit(error);
+                    reject(error);
+                }
+            );
+        });
     }
 
     /**
@@ -380,11 +391,21 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     /**
      * Initiates ListPreviewComponent sub component.
      */
-    private initListPreviewComponent(): void {
+    private initListPreviewComponent(hidePreview: boolean = true): void {
         if (this.listPreviewComponent) {
             this.listPreviewComponent.visibleEmitter = this.listPreviewVisibleEmitter;
             this.listPreviewComponent.dataEmitter = this.activeRowEmitter;
-            this.listPreviewVisibleEmitter.emit(true);
+            this.listPreviewVisibleEmitter.emit(hidePreview);
+            if (this.activeID && !hidePreview) {
+                let row = this.listRowComponent.rows.find((row: any) => {
+                    if (row[this.dataService.primaryKey()] === this.activeID) {
+                        return true;
+                    }
+                });
+                if (row) {
+                    this.listRowComponent.setActiveRow(row);
+                }
+            }
         }
     }
 
