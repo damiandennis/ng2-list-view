@@ -1,26 +1,32 @@
 {
   "name": "ng2-list-view",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple list view for view large result sets.",
-  "main": "index.js",
+  "main": "dist/bundles/ng2-list-view.umd.js",
+  "module": "dist/index.js",
   "scripts": {
-    "build": "tsc -p ./",
+    "transpile": "ngc -p src --clean",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/ng2-list-view.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng2-list-view.umd.min.js",
+    "build": "npm run transpile && npm run package && npm run minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damian Dennis",
   "license": "ISC",
   "devDependencies": {
-    "@angular/common": "^2.4.2",
-    "@angular/core": "^2.4.2",
-    "@angular/forms": "^2.4.2",
-    "@angular/http": "^2.4.2",
-    "@angular/platform-browser": "^2.4.2",
-    "@angular/compiler": "^2.4.2",
-    "@angular/compiler-cli": "^2.4.2",
+    "@angular/common": "~4.0.0",
+    "@angular/core": "~4.0.0",
+    "@angular/forms": "~4.0.0",
+    "@angular/http": "~4.0.0",
+    "@angular/platform-browser": "~4.0.0",
+    "@angular/compiler": "~4.0.0",
+    "@angular/compiler-cli": "~4.0.0",
     "rxjs": "^5.0.3",
-    "zone.js": "^0.7.4",
+    "zone.js": "^0.8.4",
     "core-js": "^2.4.1",
-    "typescript": "^2.0.10",
-    "@types/node": "^6.0.58"
+    "typescript": "^2.1",
+    "@types/node": "^6.0.58",
+    "rollup": "~0.41.6",
+    "uglify-js": "^2.8.20"
   }
 }
