@@ -1,6 +1,6 @@
 {
   "name": "ng2-list-view",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Simple list view for view large result sets.",
   "main": "dist/bundles/ng2-list-view.umd.js",
   "module": "dist/index.js",
@@ -11,7 +11,6 @@
     "build": "npm run transpile && npm run package && npm run minify",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pre:publish": "npm run build"
-
   },
   "author": "Damian Dennis",
   "license": "ISC",
