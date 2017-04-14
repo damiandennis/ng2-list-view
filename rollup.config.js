@@ -1,5 +1,5 @@
 export default {
-  entry: 'dist/index.js',
+  entry: 'dist/list-view.module.js',
   dest: 'dist/bundles/ng2-list-view.umd.js',
   sourceMap: false,
   format: 'umd',

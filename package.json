@@ -1,14 +1,17 @@
 {
   "name": "ng2-list-view",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Simple list view for view large result sets.",
-  "main": "dist/bundles/ng2-list-view.umd.js",
-  "module": "dist/index.js",
+  "main": "dist/list-view.module.js",
+  "module": "dist/list-view.module.js",
+  "jsnext:main": "dist/list-view.module.js",
+  "types": "dist/list-view.module.d.ts",
   "scripts": {
     "transpile": "ngc -p src --clean",
+    "copyTemplates": "copyfiles -u 1 src/**/*.html dist",
     "package": "rollup -c",
     "minify": "uglifyjs dist/bundles/ng2-list-view.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng2-list-view.umd.min.js",
-    "build": "npm run transpile && npm run package && npm run minify",
+    "build": "npm run transpile && npm run copyTemplates && npm run package && npm run minify",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build"
   },
@@ -29,5 +32,8 @@
     "@types/node": "^6.0.58",
     "rollup": "~0.41.6",
     "uglify-js": "^2.8.20"
+  },
+  "dependencies": {
+    "copyfiles": "^1.2.0"
   }
 }
