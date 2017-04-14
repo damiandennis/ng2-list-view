@@ -31,9 +31,7 @@
     "typescript": "^2.1",
     "@types/node": "^6.0.58",
     "rollup": "~0.41.6",
-    "uglify-js": "^2.8.20"
-  },
-  "dependencies": {
+    "uglify-js": "^2.8.20",
     "copyfiles": "^1.2.0"
   }
 }
