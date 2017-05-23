@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, EventEmitter, Output} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import "rxjs/add/operator/debounceTime";
+import {ListViewComponent} from "../list-view/list.view.component";
 
 @Component({
     selector: "c-search",
@@ -24,18 +25,24 @@ export class SearchComponent implements OnInit {
 
     @Output() @Input() public searchTerm = new EventEmitter();
     @Input() public placeholder: string = "Search";
+    @Input() public debounceTime = 500;
     @Input() public isCustom = false;
-    protected classes: Array<string> = ["form-control"];
-    protected searchInputControl: FormControl = new FormControl();
+    public classes: Array<string> = ["form-control"];
+    public searchInputControl: FormControl = new FormControl();
+    @Input() public target: ListViewComponent;
 
     ngOnInit() {
         // Subscribe to and debounce form control, emitting search results
         this.searchInputControl
             .valueChanges
-            .debounceTime(500)
+            .debounceTime(this.debounceTime)
             .subscribe((term: string) => {
                 this.searchInputControl.setValue(term, { emitEvent: false });
-                this.searchTerm.emit(term);
+                if (this.target) {
+                    this.target.searchTerm.emit(term);
+                } else {
+                    this.searchTerm.emit(term);
+                }
             });
     }
 

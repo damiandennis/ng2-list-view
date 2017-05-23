@@ -35,6 +35,11 @@
     "rxjs": "^5.0.3",
     "typescript": "^2.1",
     "uglify-js": "^2.8.20",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "@types/lodash": "^4.14.64"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "ngx-bootstrap": "^1.6.6"
   }
 }

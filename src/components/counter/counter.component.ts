@@ -9,4 +9,5 @@ export class CounterComponent {
     @Input() end: number = 1;
     @Input() total: number = 0;
     @Input() label: string = "";
+    @Input() customTemplate = false;
 }

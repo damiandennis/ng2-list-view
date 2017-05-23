@@ -19,7 +19,11 @@ export class ListRowComponent {
         this.visibleEmitter.emit(this.previewHidden);
     }
 
-    setActiveRow(row: any) {
+    setActiveRow(row: any, event?: Event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
         if (!this.isActiveRow(row)) {
             this.activeRow = row;
             this.dataEmitter.emit(row);

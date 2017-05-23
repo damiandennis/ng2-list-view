@@ -10,12 +10,18 @@ import {PaginationComponent} from "./components/pagination/pagination.component"
 import {SearchComponent} from "./components/search/search.component";
 import {ShowMoreComponent} from "./components/show-more/show.more.component";
 import {CommonModule} from "@angular/common";
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
+import {ICheckDirective} from "./directives/icheck.directive";
+import {ListFilterComponent} from "./components/list-filter/list.filter.component";
+import {BsDropdownModule} from "ngx-bootstrap/dropdown";
+import {DateFilterComponent} from "./components/date-filter/date.filter.component";
 
 @NgModule({
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        FormsModule,
+        BsDropdownModule.forRoot()
     ],
     declarations: [
         ClearFiltersComponent,
@@ -27,7 +33,10 @@ import {ReactiveFormsModule} from "@angular/forms";
         NotFoundComponent,
         PaginationComponent,
         SearchComponent,
-        ShowMoreComponent
+        ShowMoreComponent,
+        ICheckDirective,
+        ListFilterComponent,
+        DateFilterComponent
     ],
     exports: [
         ClearFiltersComponent,
@@ -39,7 +48,9 @@ import {ReactiveFormsModule} from "@angular/forms";
         NotFoundComponent,
         PaginationComponent,
         SearchComponent,
-        ShowMoreComponent
+        ShowMoreComponent,
+        ListFilterComponent,
+        DateFilterComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -10,6 +10,7 @@ export class PaginationComponent implements OnChanges {
     @Input() public page: number = 1;
     @Input() public pageCount: number = 1;
     public pages: Array<any> = [];
+    public updating = false;
 
     @Input() public changePageEmitter: EventEmitter<any>;
 
@@ -26,11 +27,12 @@ export class PaginationComponent implements OnChanges {
     }
 
     public goToPage(page: number) {
+        this.updating = true;
         this.changePageEmitter.emit(page);
     }
 
     public updatePagination() {
-
+        this.updating = false;
         let pagesArray: Array<{value: string|number, isPage: boolean, active: boolean, disabled: boolean}> = [];
         let currentPage = this.page;
         let pagesCount = this.pageCount;
