@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "outDir": "../dist",
+    "lib": ["es2015", "dom"],
+    "noImplicitAny": true,
+    "stripInternal": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "list-view.module.ts"
+  ],
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "genDir": "../dist"
+  }
+}
