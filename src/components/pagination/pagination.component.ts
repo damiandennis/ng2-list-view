@@ -7,6 +7,7 @@ import {EventEmitter} from "@angular/core";
 })
 export class PaginationComponent implements OnChanges {
 
+    @Input() public type: string = 'buttons';
     @Input() public page: number = 1;
     @Input() public pageCount: number = 1;
     public pages: Array<any> = [];
@@ -15,7 +16,16 @@ export class PaginationComponent implements OnChanges {
     @Input() public changePageEmitter: EventEmitter<any>;
 
     ngOnChanges(changes: any) {
-        this.pages = this.updatePagination();
+        if (this.type === 'buttons') {
+            this.pages = this.updatePagination();
+        } else {
+            let pages = [];
+            for (let i = 1; i <= this.pageCount; i++) {
+                pages.push(i);
+            }
+            this.pages = pages;
+        }
+
     }
 
     public onPrev() {
