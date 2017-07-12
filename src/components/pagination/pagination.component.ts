@@ -16,15 +16,7 @@ export class PaginationComponent implements OnChanges {
     @Input() public changePageEmitter: EventEmitter<any>;
 
     ngOnChanges(changes: any) {
-        if (this.type === 'buttons') {
-            this.pages = this.updatePagination();
-        } else {
-            let pages = [];
-            for (let i = 1; i <= this.pageCount; i++) {
-                pages.push(i);
-            }
-        }
-
+        this.pages = this.updatePagination();
     }
 
     public onPrev() {
@@ -42,70 +34,78 @@ export class PaginationComponent implements OnChanges {
 
     public updatePagination() {
         this.updating = false;
-        let pagesArray: Array<{value: string|number, isPage: boolean, active: boolean, disabled: boolean}> = [];
+        let pagesArray: Array<any> = [];
         let currentPage = this.page;
         let pagesCount = this.pageCount;
-        let paginationSpan = 2;
-        let startPos = 2;
-        let endPos = startPos + paginationSpan - 1;
-        let middlePos = Math.ceil(paginationSpan / 2);
 
-        // Adjust start and end positions to maintain range and keep current page as active.
-        if (currentPage >= startPos + 1) {
-            startPos = currentPage - middlePos + 1;
-            endPos = startPos + paginationSpan - 1;
-            if (endPos + 1 > pagesCount) {
-                startPos = pagesCount - paginationSpan;
-                endPos = pagesCount - 1;
+        if (this.type === 'buttons') {
+
+            let paginationSpan = 2;
+            let startPos = 2;
+            let endPos = startPos + paginationSpan - 1;
+            let middlePos = Math.ceil(paginationSpan / 2);
+
+            // Adjust start and end positions to maintain range and keep current page as active.
+            if (currentPage >= startPos + 1) {
+                startPos = currentPage - middlePos + 1;
+                endPos = startPos + paginationSpan - 1;
+                if (endPos + 1 > pagesCount) {
+                    startPos = pagesCount - paginationSpan;
+                    endPos = pagesCount - 1;
+                }
             }
-        }
-
-        /*
-         * Extra adjustments in case pagination range is larger than results.
-         */
-        if (startPos < 2) {
-            startPos = 2;
-        }
-        if (endPos >= pagesCount) {
-            endPos = pagesCount - 1;
-        }
-        if (endPos < startPos) {
-            endPos = startPos - 1;
-        }
-
-        // Only show pagination when there is more than one page.
-        if (pagesCount > 1) {
 
             /*
-             * Create pagination range.
+             * Extra adjustments in case pagination range is larger than results.
              */
-            pagesArray.push({
-                value: 1,
-                isPage: true,
-                active: +currentPage === 1,
-                disabled: false
-            });
-
-            if (startPos > 2) {
-                pagesArray.push({value: "...", isPage: false, active: false, disabled: true});
+            if (startPos < 2) {
+                startPos = 2;
             }
-            for (let i = startPos; i <= endPos; i++) {
+            if (endPos >= pagesCount) {
+                endPos = pagesCount - 1;
+            }
+            if (endPos < startPos) {
+                endPos = startPos - 1;
+            }
+
+            // Only show pagination when there is more than one page.
+            if (pagesCount > 1) {
+
+                /*
+                 * Create pagination range.
+                 */
                 pagesArray.push({
-                    value: i,
+                    value: 1,
                     isPage: true,
-                    active: i === +currentPage,
+                    active: +currentPage === 1,
+                    disabled: false
+                });
+
+                if (startPos > 2) {
+                    pagesArray.push({value: "...", isPage: false, active: false, disabled: true});
+                }
+                for (let i = startPos; i <= endPos; i++) {
+                    pagesArray.push({
+                        value: i,
+                        isPage: true,
+                        active: i === +currentPage,
+                        disabled: false
+                    });
+                }
+                if (endPos + 1 !== +pagesCount) {
+                    pagesArray.push({value: "...", isPage: false, active: false, disabled: true});
+                }
+                pagesArray.push({
+                    value: pagesCount,
+                    isPage: true,
+                    active: +pagesCount === +currentPage,
                     disabled: false
                 });
             }
-            if (endPos + 1 !== +pagesCount) {
-                pagesArray.push({value: "...", isPage: false, active: false, disabled: true});
+        } else {
+            for (let i = 1; i <= this.pageCount; i++) {
+                pagesArray.push(i);
             }
-            pagesArray.push({
-                value: pagesCount,
-                isPage: true,
-                active: +pagesCount === +currentPage,
-                disabled: false
-            });
         }
 
         return pagesArray;
