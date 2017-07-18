@@ -17,6 +17,6 @@
 </ng-template>
 <ng-template [ngIf]="type !== 'buttons' && pages.length > 1">
     <select [(ngModel)]="page" (ngModelChange)="goToPage($event)">
-        <option *ngFor="let current of pages" [value]="current">{{current}}</option>
+        <ng-content></ng-content><option *ngFor="let current of pages" [value]="current">{{current}}</option>
     </select>
 </ng-template>
