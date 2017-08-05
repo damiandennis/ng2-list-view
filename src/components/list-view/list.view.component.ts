@@ -71,6 +71,8 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     public currentPage: number = 1;
     public loading: boolean = true;
     public pageCount: number;
+    public meta = {};
+    public data: Array<any> = [];
 
     /*
      * Direct references to child components.
@@ -271,6 +273,8 @@ export class ListViewComponent implements OnInit, AfterContentInit {
                 (data) => {
                     this.loading = false;
                     this.updating = false;
+                    this.meta = data.meta;
+                    this.data = data.payload;
                     this.currentPage = data.meta.page;
                     this.pageCount = data.meta.pageCount;
                     this.initSearchComponent();
