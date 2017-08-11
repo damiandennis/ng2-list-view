@@ -26,13 +26,11 @@ import {DateFilterComponent} from "../date-filter/date.filter.component";
  * @Component({
  *    selector: 'c-my-component',
  *    template: `
- *        <c-list-view [dataService]="userService">
- *            <c-pagination></c-pagination>
- *            <c-list-row #list>
- *              <div *ngFor="let row of list.rows">
- *                {{row.firstName}}
- *              </div>
-*             </c-list-row>
+ *        <c-list-view #list [dataService]="userService">
+ *          <c-pagination></c-pagination>
+ *          <div *ngFor="let row of list.rows">
+ *            {{row.firstName}}
+ *          </div>
  *        </c-list-view>
  *    `,
  *
@@ -72,7 +70,9 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     public loading: boolean = true;
     public pageCount: number;
     public meta = {};
-    public data: Array<any> = [];
+    public rows: Array<any> = [];
+    public activeRow: any;
+    @Input() public previewHidden = true;
 
     /*
      * Direct references to child components.
@@ -157,7 +157,10 @@ export class ListViewComponent implements OnInit, AfterContentInit {
 
         this.listPreviewVisibleEmitter.subscribe((hidden: any) => {
             this.listPreviewComponent.hidden = hidden;
-            this.listRowComponent.previewHidden = hidden;
+            if (this.listRowComponent) {
+                this.listRowComponent.previewHidden = hidden;
+            }
+            this.previewHidden = hidden;
         });
 
         this.activeRowEmitter.subscribe((row: any) => {
@@ -230,7 +233,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     /**
      * Applys filters and update subscriptions.
      */
-    public applyFilters(append: Boolean = false) {
+    public applyFilters(append: boolean = false) {
         // Apply filters to data service
         this.updating = true;
         this.dataSource = this.dataService
@@ -267,14 +270,20 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     /**
      * Syncs all data to child components
      */
-    public updateSubscriptions(append: Boolean = false, hidePreview: boolean = true) {
+    public updateSubscriptions(append: boolean = false, hidePreview: boolean = true) {
         return new Promise((resolve, reject) => {
             this.dataSource.subscribe(
                 (data) => {
                     this.loading = false;
                     this.updating = false;
                     this.meta = data.meta;
-                    this.data = data.payload;
+
+                    if (append) {
+                        this.rows = this.rows.concat(data.payload);
+                    } else {
+                        this.rows = data.payload;
+                    }
+
                     this.currentPage = data.meta.page;
                     this.pageCount = data.meta.pageCount;
                     this.initSearchComponent();
@@ -439,13 +448,26 @@ export class ListViewComponent implements OnInit, AfterContentInit {
             this.listPreviewComponent.dataEmitter = this.activeRowEmitter;
             this.listPreviewVisibleEmitter.emit(hidePreview);
             if (this.activeID && !hidePreview) {
-                let row = this.listRowComponent.rows.find((row: any) => {
+
+                // For backward compatibility.
+                if (this.listRowComponent) {
+                    let row = this.listRowComponent.rows.find((row: any) => {
+                        if (row[this.dataService.primaryKey()] === this.activeID) {
+                            return true;
+                        }
+                    });
+                    if (row) {
+                        this.listRowComponent.setActiveRow(row);
+                    }
+                }
+
+                let data = this.rows.find((row: any) => {
                     if (row[this.dataService.primaryKey()] === this.activeID) {
                         return true;
                     }
                 });
-                if (row) {
-                    this.listRowComponent.setActiveRow(row);
+                if (data) {
+                    this.setActiveRow(data);
                 }
             }
         }
@@ -466,4 +488,64 @@ export class ListViewComponent implements OnInit, AfterContentInit {
 
         }
     }
+
+    /**
+     * Toggles the visibility of the list preview component.
+     */
+    public togglePreviewVisibility() {
+        this.previewHidden = !this.previewHidden;
+        this.listPreviewVisibleEmitter.emit(this.previewHidden);
+    }
+
+    /**
+     * Sets the current row as active.
+     *
+     * @param row
+     * @param {Event} event
+     * @return {boolean}
+     */
+    public setActiveRow(row: any, event?: Event) {
+
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        if (this.listPreviewComponent && this.listPreviewComponent.shouldPromptReset()) {
+            if (!window.confirm("You have unsaved changes, continue?")) {
+                return false;
+            }
+        }
+
+        if (!this.isActiveRow(row)) {
+            this.activeRow = row;
+            this.activeRowEmitter.emit(row);
+            if (this.isPreviewHidden()) {
+                this.togglePreviewVisibility();
+            }
+        } else {
+            this.togglePreviewVisibility();
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the current row is the active one.
+     *
+     * @param row
+     * @returns {boolean}
+     */
+    public isActiveRow(row: any) {
+        return this.activeRow === row && !this.isPreviewHidden();
+    }
+
+    /**
+     * Checks if the preview is hidden.
+     *
+     * @returns {boolean}
+     */
+    public isPreviewHidden() {
+        return this.previewHidden;
+    }
+
 }

@@ -15,6 +15,7 @@ import {ICheckDirective} from "./directives/icheck.directive";
 import {ListFilterComponent} from "./components/list-filter/list.filter.component";
 import {BsDropdownModule} from "ngx-bootstrap/dropdown";
 import {DateFilterComponent} from "./components/date-filter/date.filter.component";
+import {ListFormResetDirective} from "./directives/list-form-reset.directive";
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import {DateFilterComponent} from "./components/date-filter/date.filter.componen
         ShowMoreComponent,
         ICheckDirective,
         ListFilterComponent,
-        DateFilterComponent
+        DateFilterComponent,
+        ListFormResetDirective
     ],
     exports: [
         ClearFiltersComponent,
@@ -50,7 +52,8 @@ import {DateFilterComponent} from "./components/date-filter/date.filter.componen
         SearchComponent,
         ShowMoreComponent,
         ListFilterComponent,
-        DateFilterComponent
+        DateFilterComponent,
+        ListFormResetDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

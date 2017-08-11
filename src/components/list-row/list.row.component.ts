@@ -2,6 +2,9 @@ import {Component} from "@angular/core";
 import {Input} from "@angular/core";
 import {EventEmitter} from "@angular/core";
 
+/**
+ * @deprecated Use list view directly.
+ */
 @Component({
     selector: "c-list-row",
     templateUrl: "list.row.component.html"
