@@ -1,7 +1,7 @@
 {
   "name": "ng2-list-view",
   "version": "0.0.21",
-  "description": "Simple list view for view large result sets.",
+  "description": "Simple list view for viewing large result sets.",
   "main": "dist/list-view.module.js",
   "module": "dist/list-view.module.js",
   "jsnext:main": "dist/list-view.module.js",
