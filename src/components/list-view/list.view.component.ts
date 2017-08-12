@@ -216,6 +216,18 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     }
 
     /**
+     * Resets the data source back to default with filters if defined.
+     *
+     * @param {Array<ApiFilterInterface>} filters
+     */
+    public resetDataSource(filters: Array<ApiFilterInterface> = null) {
+        if (filters !== null) {
+            this.originalFilters = filters;
+        }
+        this.clearFilters(true);
+    }
+
+    /**
      * Makes sure that filter is unique. Updates existing if already exists.
      *
      * @param filter
@@ -512,7 +524,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
         }
 
         if (this.listPreviewComponent && this.listPreviewComponent.shouldPromptReset()) {
-            if (!window.confirm("You have unsaved changes, continue?")) {
+            if (!window.confirm("Your unsaved changes will be reset, continue?")) {
                 return false;
             }
         }
