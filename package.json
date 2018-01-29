@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "ngx-bootstrap": "^2.0.0-beta.8"
+    "ngx-bootstrap": "^2.0.0"
   }
 }
