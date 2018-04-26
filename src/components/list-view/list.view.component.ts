@@ -13,6 +13,7 @@ import {ClearFiltersComponent} from "../clear-filters/clear.filters.component";
 import {ShowMoreComponent} from "../show-more/show.more.component";
 import {ListFilterComponent} from "../list-filter/list.filter.component";
 import {DateFilterComponent} from "../date-filter/date.filter.component";
+import {Subscription} from "rxjs/Subscription";
 
 /**
  * This component is a container for managing list view components together.
@@ -73,6 +74,7 @@ export class ListViewComponent implements OnInit, AfterContentInit {
     public rows: Array<any> = [];
     public activeRow: any;
     @Input() public previewHidden = true;
+    public contentHandle: Subscription;
 
     /*
      * Direct references to child components.
@@ -284,7 +286,10 @@ export class ListViewComponent implements OnInit, AfterContentInit {
      */
     public updateSubscriptions(append: boolean = false, hidePreview: boolean = true) {
         return new Promise((resolve, reject) => {
-            this.dataSource.subscribe(
+            if (this.contentHandle) {
+                this.contentHandle.unsubscribe();
+            }
+            this.contentHandle = this.dataSource.subscribe(
                 (data) => {
                     this.loading = false;
                     this.updating = false;
